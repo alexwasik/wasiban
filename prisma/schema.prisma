@@ -1,0 +1,109 @@
+// Wasiban Kanban Board Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Board {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  color       String?  // Hex color for board styling
+  position    Int      @default(0) // For ordering boards
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  columns     Column[]
+  labels      Label[]
+
+  @@index([position])
+}
+
+model Column {
+  id        String   @id @default(cuid())
+  name      String
+  position  Int      // For ordering columns within a board
+  boardId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  board     Board    @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards     Card[]
+
+  @@index([boardId, position])
+}
+
+model Card {
+  id           String    @id @default(cuid())
+  title        String
+  description  String?
+  statusUpdate String?
+  position     Int       // For ordering cards within a column
+  dueDate      DateTime?
+  priority     String?   // "low" | "medium" | "high" | "highest"
+  columnId     String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  column         Column          @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  labels         CardLabel[]
+  checklistItems ChecklistItem[]
+  comments       Comment[]
+
+  @@index([columnId, position])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  cardId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([cardId, createdAt])
+}
+
+model Label {
+  id      String @id @default(cuid())
+  name    String
+  color   String // Ant Design preset color or hex
+  boardId String
+
+  board   Board       @relation(fields: [boardId], references: [id], onDelete: Cascade)
+  cards   CardLabel[]
+
+  @@unique([boardId, name])
+  @@index([boardId])
+}
+
+model CardLabel {
+  cardId  String
+  labelId String
+
+  card    Card   @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  label   Label  @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@id([cardId, labelId])
+  @@index([cardId])
+  @@index([labelId])
+}
+
+model ChecklistItem {
+  id        String   @id @default(cuid())
+  content   String
+  completed Boolean  @default(false)
+  position  Int      // For ordering within a card
+  cardId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  card      Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+
+  @@index([cardId, position])
+}
