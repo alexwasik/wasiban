@@ -4,6 +4,8 @@
 
 - [Docker](https://docs.docker.com/get-docker/) installed on your machine
 
+> **Note:** If you are behind a corporate proxy/firewall, you may need to add a corporate `.pem` or `.crt` file. You can circumvent this by adding the `--tls-verify=false` flag (Podman) or `--insecure` flag (Docker). This would only be acceptable for a dev environment, **not** for production.
+
 ## Quick Start
 
 ### 1. Build the image

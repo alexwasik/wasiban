@@ -17,7 +17,7 @@ A kanban board app built with Next.js, Ant Design, and Prisma.
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js v20.19+, v22.12+, v24.0+ (prisma requirement)
 - npm
 
 ### Setup
@@ -70,7 +70,11 @@ A kanban board app built with Next.js, Ant Design, and Prisma.
 
 ---
 
-## Running with Docker
+## Running with Docker (or Podman)
+
+> **Note:** If you are behind a corporate proxy/firewall, you may need to add a corporate `.pem` or `.crt` file. You can circumvent this by adding the `--tls-verify=false` flag (Podman) or `--insecure` flag (Docker). This would only be acceptable for a dev environment, **not** for production.
+
+> **Podman users:** Podman is CLI-compatible with Docker. Replace every `docker` command below (and in [DOCKER.md](DOCKER.md)) with `podman`. Everything else — flags, volume syntax, image names — stays the same. Named volumes are managed with `podman volume` instead of `docker volume`.
 
 See [DOCKER.md](DOCKER.md) for full Docker instructions. Quick start:
 
@@ -121,14 +125,21 @@ claude mcp add --transport stdio --scope user wasiban-local \
 
 Replace `/path/to/wasiban` with the absolute path to your cloned repo.
 
-#### Option 2 — Docker
+#### Option 2 — Docker (or Podman)
 
 ```bash
 claude mcp add --transport stdio --scope user wasiban-docker \
   -- docker run -i -v wasiban-data:/app/data wasiban node ./node_modules/.bin/tsx src/mcp/server.ts
 ```
 
-> If you have made code changes since the last Docker build, run `docker build -t wasiban .` first.
+Podman users replace `docker` with `podman`:
+
+```bash
+claude mcp add --transport stdio --scope user wasiban-docker \
+  -- podman run -i -v wasiban-data:/app/data wasiban node ./node_modules/.bin/tsx src/mcp/server.ts
+```
+
+> If you have made code changes since the last build, run `docker build -t wasiban .` (or `podman build -t wasiban .`) first.
 
 ### Available tools
 
