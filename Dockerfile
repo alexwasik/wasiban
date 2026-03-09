@@ -13,6 +13,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ENV DATABASE_URL="file:./prisma/dev.db"
+# If you are behind a corporate proxy that intercepts TLS, uncomment the line below.
+# A more secure alternative is to COPY your corporate CA cert and RUN update-ca-certificates before this stage (see DOCKER.md).
+# ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 RUN npx prisma generate
 RUN npx prisma migrate deploy
 RUN npm run build

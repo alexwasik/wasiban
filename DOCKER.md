@@ -4,7 +4,32 @@
 
 - [Docker](https://docs.docker.com/get-docker/) installed on your machine
 
-> **Note:** If you are behind a corporate proxy/firewall, you may need to add a corporate `.pem` or `.crt` file. You can circumvent this by adding the `--tls-verify=false` flag (Podman) or `--insecure` flag (Docker). This would only be acceptable for a dev environment, **not** for production.
+> **Note:** If you are behind a corporate proxy/firewall, you may need to handle TLS certificate validation. Two options are available:
+>
+> **Option A — Disable TLS verification (dev only, not for production)**
+>
+> Add the `--tls-verify=false` flag (Podman) or `--insecure` flag (Docker) to bypass registry TLS. You must also set `NODE_TLS_REJECT_UNAUTHORIZED=0` in the `build` stage of the Dockerfile so that Node.js (Prisma, npm) skips TLS verification when making network calls during the build:
+>
+> ```dockerfile
+> # In the build stage, before the prisma commands:
+> ENV NODE_TLS_REJECT_UNAUTHORIZED=0
+> RUN npx prisma generate
+> RUN npx prisma migrate deploy
+> RUN npm run build
+> ```
+>
+> **Option B — Trust your corporate CA certificate (recommended)**
+>
+> A more secure approach is to copy your corporate CA certificate file into the container and trust it in the build stage before any network calls:
+>
+> ```dockerfile
+> # In the build stage, before the prisma commands:
+> COPY corporate-ca.pem /usr/local/share/ca-certificates/corporate-ca.crt
+> RUN update-ca-certificates
+> RUN npx prisma generate
+> RUN npx prisma migrate deploy
+> RUN npm run build
+> ```
 
 ## Quick Start
 
