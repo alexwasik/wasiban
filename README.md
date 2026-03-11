@@ -36,12 +36,13 @@ A kanban board app built with Next.js, Ant Design, and Prisma.
    DATABASE_URL="file:./dev.db"
    ```
 
-3. **Run migrations and generate Prisma client**
+3. **Run migrations**
 
    ```bash
-   npx prisma migrate deploy
-   npx prisma generate
+   npx prisma migrate dev
    ```
+
+   This applies migrations and generates the Prisma client automatically.
 
 4. **Seed the database** _(optional — creates a sample board)_
 
