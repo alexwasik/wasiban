@@ -41,5 +41,8 @@ next-env.d.ts
 # prisma
 /prisma/migrations/*
 !/prisma/migrations/.gitkeep
+dev.db
+dev.db-shm
+dev.db-wal
 
 /generated/prisma
