@@ -19,10 +19,12 @@ export function useThemeMode() {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [mode, setMode] = useState<ThemeMode>("light");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("theme-mode") as ThemeMode | null;
     if (saved) setMode(saved);
+    setMounted(true);
   }, []);
 
   const toggleMode = () => {
@@ -31,16 +33,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("theme-mode", next);
   };
 
+  const algorithm = mounted && mode === "dark"
+    ? antTheme.darkAlgorithm
+    : antTheme.defaultAlgorithm;
+
   return (
     <ThemeContext.Provider value={{ mode, toggleMode }}>
-      <ConfigProvider
-        theme={{
-          algorithm:
-            mode === "dark"
-              ? antTheme.darkAlgorithm
-              : antTheme.defaultAlgorithm,
-        }}
-      >
+      <ConfigProvider theme={{ algorithm }}>
         <App>{children}</App>
       </ConfigProvider>
     </ThemeContext.Provider>

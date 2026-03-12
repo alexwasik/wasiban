@@ -191,7 +191,7 @@ export function KanbanCard({
                 }}
               >
                 <CalendarOutlined />
-                {new Date(card.dueDate).toLocaleDateString()}
+                {new Date(card.dueDate).toLocaleDateString("en-CA")}
               </div>
             )}
           </div>
