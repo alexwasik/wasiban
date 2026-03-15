@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getBoardById } from '@/lib/db/boards';
-import { KanbanBoard } from '@/components/kanban/KanbanBoard';
+import { KanbanBoardClient } from '@/components/kanban/KanbanBoardClient';
 import { BoardHeader } from '@/components/boards/BoardHeader';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +20,7 @@ export default async function BoardPage({
   return (
     <div>
       <BoardHeader name={board.name} description={board.description} />
-      <KanbanBoard initialData={board} />
+      <KanbanBoardClient initialData={board} />
     </div>
   );
 }

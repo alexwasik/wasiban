@@ -22,6 +22,9 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           borderBottom: `1px solid ${token.colorBorderSecondary}`,
           padding: '0 24px',
           height: '64px',
+          position: 'sticky',
+          top: 0,
+          zIndex: 100,
         }}
       >
         <Link
@@ -47,7 +50,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         />
       </header>
       <div
-        style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}
+        style={{ display: 'flex', flex: 1, alignItems: 'stretch', minHeight: 'calc(100vh - 64px)' }}
       >
         <Sidebar />
         <main
@@ -56,8 +59,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
             minWidth: 0,
             padding: '24px',
             background: token.colorBgLayout,
-            overflowX: 'hidden',
-            overflowY: 'auto',
           }}
         >
           {children}

@@ -205,7 +205,7 @@ export function KanbanColumn({
           </div>
         }
         style={{ background: token.colorBgLayout }}
-        styles={{ body: { padding: '8px' } }}
+        styles={{ body: { padding: '8px', paddingBottom: '16px' } }}
       >
         <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
           <div
@@ -214,7 +214,7 @@ export function KanbanColumn({
               display: 'flex',
               flexDirection: 'column',
               gap: '8px',
-              minHeight: '200px',
+              minHeight: '50px',
             }}
           >
             {column.cards.map((card) => (
@@ -227,50 +227,51 @@ export function KanbanColumn({
                 onAutoOpened={onNewCardOpened}
               />
             ))}
-
-            {isAddingCard ? (
-              <div
-                style={{
-                  padding: '8px',
-                  background: token.colorBgContainer,
-                  borderRadius: '4px',
-                }}
-              >
-                <Input
-                  placeholder='Enter card title'
-                  value={newCardTitle}
-                  onChange={(e) => setNewCardTitle(e.target.value)}
-                  onPressEnter={handleAddCard}
-                  autoFocus
-                  style={{ marginBottom: '8px' }}
-                />
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <Button type='primary' size='small' onClick={handleAddCard}>
-                    Add
-                  </Button>
-                  <Button
-                    size='small'
-                    onClick={() => {
-                      setIsAddingCard(false);
-                      setNewCardTitle('');
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            ) : (
-              <Button
-                type='dashed'
-                icon={<PlusOutlined />}
-                onClick={() => setIsAddingCard(true)}
-                style={{ width: '100%' }}
-              >
-                Add Card
-              </Button>
-            )}
           </div>
         </SortableContext>
+
+        {isAddingCard ? (
+          <div
+            style={{
+              marginTop: '16px',
+              padding: '8px',
+              background: token.colorBgContainer,
+              borderRadius: '4px',
+            }}
+          >
+            <Input
+              placeholder='Enter card title'
+              value={newCardTitle}
+              onChange={(e) => setNewCardTitle(e.target.value)}
+              onPressEnter={handleAddCard}
+              autoFocus
+              style={{ marginBottom: '8px' }}
+            />
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Button type='primary' size='small' onClick={handleAddCard}>
+                Add
+              </Button>
+              <Button
+                size='small'
+                onClick={() => {
+                  setIsAddingCard(false);
+                  setNewCardTitle('');
+                }}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button
+            type='dashed'
+            icon={<PlusOutlined />}
+            onClick={() => setIsAddingCard(true)}
+            style={{ width: '100%', marginTop: '16px' }}
+          >
+            Add Card
+          </Button>
+        )}
       </Card>
     </div>
   );

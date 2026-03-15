@@ -85,7 +85,10 @@ export function Sidebar() {
         borderRight: `1px solid ${token.colorBorderSecondary}`,
         display: "flex",
         flexDirection: "column",
-        height: "100vh",
+        position: "sticky",
+        top: "64px",
+        height: "calc(100vh - 64px)",
+        overflowY: "auto",
       }}
     >
       <div

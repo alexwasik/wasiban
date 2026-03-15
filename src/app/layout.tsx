@@ -21,8 +21,7 @@ export default function RootLayout({
       <body
         style={{
           margin: 0,
-          height: '100vh',
-          overflow: 'hidden',
+          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
         }}
