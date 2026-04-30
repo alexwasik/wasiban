@@ -5,8 +5,6 @@ import { App, Card, Tag, theme as antTheme } from 'antd';
 import { CalendarOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { useAlert } from '@/contexts/AlertContext';
 import { CardDetailDrawer } from './CardDetailDrawer';
 import { PriorityIcon } from '@/components/ui/PriorityIcon';
@@ -49,7 +47,6 @@ export function KanbanCard({
   const { modal } = App.useApp();
   const { token } = antTheme.useToken();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     if (autoOpen) {
@@ -113,7 +110,7 @@ export function KanbanCard({
           size='small'
           hoverable
           style={{ cursor: 'grab' }}
-          styles={{ body: { padding: '12px' } }}
+          styles={{ body: { padding: '12px', minHeight: '130px' } }}
           onClick={(e) => {
             e.stopPropagation();
             setDrawerOpen(true);
@@ -126,37 +123,6 @@ export function KanbanCard({
         >
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ fontWeight: 500 }}>{card.title}</div>
-
-            {card.description && (
-              <>
-                <div
-                  style={{
-                    fontSize: '12px',
-                    color: token.colorTextSecondary,
-                    overflow: 'hidden',
-                    maxHeight: expanded ? undefined : '60px',
-                  }}
-                >
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {card.description}
-                  </ReactMarkdown>
-                </div>
-                <div
-                  style={{
-                    fontSize: '11px',
-                    color: token.colorPrimary,
-                    cursor: 'pointer',
-                    textAlign: 'center',
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setExpanded(!expanded);
-                  }}
-                >
-                  {expanded ? 'Show less' : '...'}
-                </div>
-              </>
-            )}
 
             {(card.labels.length > 0 || card.priority) && (
               <div

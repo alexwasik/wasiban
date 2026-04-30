@@ -81,14 +81,23 @@ const MarkdownEditor = memo(function MarkdownEditor({
   onChange,
   placeholder,
   rows = 4,
+  initialPreviewMode = false,
+  onPreviewModeChange,
 }: {
   value: string;
   onChange: (val: string) => void;
   placeholder?: string;
   rows?: number;
+  initialPreviewMode?: boolean;
+  onPreviewModeChange?: (preview: boolean) => void;
 }) {
   const { token } = antTheme.useToken();
-  const [previewMode, setPreviewMode] = useState(false);
+  const [previewMode, setPreviewMode] = useState(initialPreviewMode);
+
+  const togglePreview = (next: boolean) => {
+    setPreviewMode(next);
+    onPreviewModeChange?.(next);
+  };
   const textAreaRef = useRef<any>(null);
 
   const getTA = (): HTMLTextAreaElement | null =>
@@ -199,7 +208,7 @@ const MarkdownEditor = memo(function MarkdownEditor({
           type='text'
           size='small'
           icon={previewMode ? <EditOutlined /> : <EyeOutlined />}
-          onClick={() => setPreviewMode((p) => !p)}
+          onClick={() => togglePreview(!previewMode)}
         >
           {previewMode ? 'Edit' : 'Preview'}
         </Button>
@@ -291,6 +300,9 @@ export function CardDetailDrawer({
   const [savingStatus, setSavingStatus] = useState(false);
   const [savingComment, setSavingComment] = useState(false);
 
+  const [descPreview, setDescPreview] = useState(false);
+  const [statusPreview, setStatusPreview] = useState(false);
+
   useEffect(() => {
     if (card && open) {
       setTitle(card.title);
@@ -299,6 +311,8 @@ export function CardDetailDrawer({
       setDueDate(card.dueDate ? dayjs(card.dueDate) : null);
       setPriority(card.priority || null);
       setNewComment('');
+      setDescPreview(!!card.description);
+      setStatusPreview(!!card.statusUpdate);
       fetchComments(card.id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -494,12 +508,15 @@ export function CardDetailDrawer({
           Description
         </Text>
         <MarkdownEditor
+          key={card.id + '-desc'}
           value={description}
           onChange={setDescription}
           placeholder='Add a more detailed description... (supports markdown)'
           rows={5}
+          initialPreviewMode={!!card.description}
+          onPreviewModeChange={setDescPreview}
         />
-        <SaveRow loading={savingDesc} onClick={handleSaveDescription} />
+        <SaveRow loading={savingDesc} onClick={handleSaveDescription} disabled={descPreview} />
       </div>
 
       {/* Due Date */}
@@ -559,12 +576,15 @@ export function CardDetailDrawer({
           Status Update
         </Title>
         <MarkdownEditor
+          key={card.id + '-status'}
           value={statusUpdate}
           onChange={setStatusUpdate}
           placeholder='Post a status update... (supports markdown)'
           rows={4}
+          initialPreviewMode={!!card.statusUpdate}
+          onPreviewModeChange={setStatusPreview}
         />
-        <SaveRow loading={savingStatus} onClick={handleSaveStatusUpdate} />
+        <SaveRow loading={savingStatus} onClick={handleSaveStatusUpdate} disabled={statusPreview} />
       </div>
 
       <Divider />
