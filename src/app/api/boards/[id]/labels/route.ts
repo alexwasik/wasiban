@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Prisma } from "@prisma/client";
 import { getBoardLabels, createLabel, getOrCreateDefaultLabels } from "@/lib/db/labels";
 
 export async function GET(
@@ -36,6 +37,15 @@ export async function POST(
     return NextResponse.json(label);
   } catch (error) {
     console.error("Error creating label:", error);
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return NextResponse.json(
+        { error: "A label with that name already exists on this board" },
+        { status: 400 }
+      );
+    }
     return NextResponse.json(
       { error: "Failed to create label" },
       { status: 500 }
