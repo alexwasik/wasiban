@@ -117,7 +117,10 @@ export function LabelSelector({
         }),
       });
 
-      if (!response.ok) throw new Error('Failed to create label');
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data?.error ?? 'Failed to create label');
+      }
 
       showAlert('success', 'Label created!');
       form.resetFields();
@@ -126,7 +129,7 @@ export function LabelSelector({
       fetchLabels();
     } catch (error) {
       console.error('Error creating label:', error);
-      showAlert('error', 'Failed to create label');
+      showAlert('error', error instanceof Error ? error.message : 'Failed to create label');
     }
   };
 
